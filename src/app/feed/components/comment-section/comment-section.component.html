@@ -1,0 +1,78 @@
+<div class="pt-2">
+  <!-- Add Comment Form - Siempre visible -->
+  <div class="mb-3">
+    <div class="flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newCommentContent"
+        (keyup.enter)="addComment()"
+        placeholder="Escribe un comentario..."
+        class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        (click)="addComment()"
+        [disabled]="!newCommentContent.trim()"
+        class="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      >
+        💬
+      </button>
+    </div>
+  </div>
+
+  <!-- Comments Toggle Button - Solo mostrar si NO es autoExpand -->
+  <button
+    *ngIf="!autoExpand"
+    (click)="toggleComments()"
+    class="text-gray-600 hover:text-gray-900 text-sm font-medium flex items-center gap-2 mb-2"
+  >
+    <span>{{ isExpanded ? '▼' : '▶' }}</span>
+    <span>{{ isExpanded ? 'Ocultar' : 'Ver' }} comentarios</span>
+  </button>
+
+  <!-- Comments Section -->
+  <div *ngIf="isExpanded" class="mt-2">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-3">
+      <span class="text-gray-500 text-sm">Cargando comentarios...</span>
+    </div>
+
+    <!-- Comments List -->
+    <div *ngIf="!isLoading && comments.length > 0" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+      <div *ngFor="let comment of comments" class="flex gap-2 p-2 bg-gray-50 rounded-lg">
+        <!-- User Avatar -->
+        <img
+          [src]="comment.user.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + comment.userId"
+          [alt]="comment.user.username"
+          class="w-10 h-10 rounded-full object-cover"
+        />
+        
+        <!-- Comment Content -->
+        <div class="flex-1">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-semibold text-gray-900">{{ comment.user.username || 'Usuario' }}</span>
+              <span class="text-xs text-gray-500 ml-2">{{ comment.createdAt | date : 'short' }}</span>
+            </div>
+            
+            <!-- Delete Button (only for author) -->
+            <button
+              *ngIf="isCommentAuthor(comment)"
+              (click)="deleteComment(comment.id)"
+              class="text-red-500 hover:text-red-700 text-sm"
+              title="Eliminar comentario"
+            >
+              🗑️
+            </button>
+          </div>
+          
+          <p class="text-gray-700 mt-1">{{ comment.content }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && comments.length === 0" class="text-center py-4 text-gray-500 text-sm">
+      <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+    </div>
+  </div>
+</div>

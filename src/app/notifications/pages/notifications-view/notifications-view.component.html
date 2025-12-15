@@ -1,0 +1,100 @@
+<div class="min-h-screen bg-white">
+  <!-- Header -->
+  <div class="sticky top-0 z-10 bg-white border-b border-gray-200">
+    <div class="max-w-2xl mx-auto px-4 py-4">
+      <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+        🔔 Notificaciones
+      </h1>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="flex overflow-x-auto px-4 pb-4 gap-2">
+      <button
+        (click)="filterType = 'all'; filterNotifications()"
+        [class.active]="filterType === 'all'"
+        class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
+        [ngClass]="{
+          'bg-gradient-to-r from-pink-500 to-purple-600 text-white': filterType === 'all',
+          'bg-gray-100 text-gray-700': filterType !== 'all'
+        }"
+      >
+        Todas
+      </button>
+      <button
+        (click)="filterType = 'like'; filterNotifications()"
+        [class.active]="filterType === 'like'"
+        class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
+        [ngClass]="{
+          'bg-gradient-to-r from-pink-500 to-purple-600 text-white': filterType === 'like',
+          'bg-gray-100 text-gray-700': filterType !== 'like'
+        }"
+      >
+        ❤️ Me gusta
+      </button>
+      <button
+        (click)="filterType = 'comment'; filterNotifications()"
+        [class.active]="filterType === 'comment'"
+        class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
+        [ngClass]="{
+          'bg-gradient-to-r from-pink-500 to-purple-600 text-white': filterType === 'comment',
+          'bg-gray-100 text-gray-700': filterType !== 'comment'
+        }"
+      >
+        💬 Comentarios
+      </button>
+      <button
+        (click)="filterType = 'follow'; filterNotifications()"
+        [class.active]="filterType === 'follow'"
+        class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
+        [ngClass]="{
+          'bg-gradient-to-r from-pink-500 to-purple-600 text-white': filterType === 'follow',
+          'bg-gray-100 text-gray-700': filterType !== 'follow'
+        }"
+      >
+        👤 Seguimientos
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="max-w-2xl mx-auto">
+    <div *ngIf="notifications.length === 0" class="text-center py-12">
+      <p class="text-gray-500 text-lg">No tienes notificaciones</p>
+    </div>
+
+    <div *ngFor="let notification of notifications" class="border-b border-gray-100">
+      <div
+        [class.bg-pink-50]="!notification.read"
+        class="p-4 hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-4"
+        (click)="markAsRead(notification)"
+      >
+        <!-- User Avatar -->
+        <img [src]="notification.fromUser.profileImage" [alt]="notification.fromUser.username" class="w-12 h-12 rounded-full flex-shrink-0" />
+
+        <!-- Notification Content -->
+        <div class="flex-1 min-w-0">
+          <p class="text-sm">
+            <span class="font-bold">{{ notification.fromUser.username }}</span>
+            <span class="text-gray-600"> {{ getNotificationMessage(notification) }}</span>
+          </p>
+          <p class="text-xs text-gray-500 mt-1">{{ getTimeAgo(notification.createdAt) }}</p>
+        </div>
+
+        <!-- Icon -->
+        <span class="text-2xl flex-shrink-0">{{ getNotificationIcon(notification.type) }}</span>
+
+        <!-- Delete Button -->
+        <button
+          (click)="deleteNotification(notification.id); $event.stopPropagation()"
+          class="text-gray-400 hover:text-red-500 transition-colors ml-2"
+          title="Eliminar notificación"
+        >
+          ✕
+        </button>
+
+        <!-- Unread Indicator -->
+        <div *ngIf="!notification.read" class="w-2 h-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 flex-shrink-0"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">🖇️ Posts Guardados</h1>
+    <p class="text-gray-600">{{ savedPosts.length }} publicaciones guardadas</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-12">
+    <div class="inline-block animate-spin">
+      <span class="text-4xl">📷</span>
+    </div>
+    <p class="text-gray-500 mt-4">Cargando posts guardados...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && savedPosts.length === 0" class="text-center py-16">
+    <div class="text-6xl mb-4">📭</div>
+    <p class="text-gray-500 text-lg">Aún no tienes posts guardados</p>
+    <p class="text-gray-400 text-sm mt-2">Guarda tus posts favoritos para verlos aquí más tarde</p>
+  </div>
+
+  <!-- Saved Posts Grid -->
+  <div *ngIf="!isLoading && savedPosts.length > 0" class="grid grid-cols-3 gap-1">
+    <div *ngFor="let post of savedPosts" class="relative overflow-hidden bg-gray-200 group aspect-square cursor-pointer" (click)="openModal(post)">
+      <img 
+        [src]="getImageUrl(post.imageUrl)" 
+        [alt]="post.caption" 
+        class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+      />
+    </div>
+  </div>
+
+  <!-- Modal estilo Instagram -->
+  <div *ngIf="showModal && selectedPost" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" (click)="closeModal()">
+    <div class="bg-white rounded-xl max-w-6xl w-full max-h-[85vh] flex overflow-hidden shadow-2xl" (click)="$event.stopPropagation()">
+      <!-- Imagen a la izquierda -->
+      <div class="flex-1 flex items-center justify-center bg-black">
+        <img
+          [src]="getImageUrl(selectedPost.imageUrl)"
+          alt="Post"
+          class="w-full h-full object-contain"
+        />
+      </div>
+
+      <!-- Panel derecho: Info y comentarios -->
+      <div class="w-96 flex flex-col bg-gray-50">
+        <!-- Header con usuario y menú -->
+        <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <img
+              [src]="selectedPost.user?.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + selectedPost.userId"
+              alt="User"
+              class="w-10 h-10 rounded-full"
+            />
+            <span class="font-bold text-gray-900">{{ selectedPost.user?.username || 'Usuario' }}</span>
+          </div>
+          <div class="relative">
+            <button (click)="togglePostMenu()" class="text-gray-500 hover:text-gray-700 text-2xl">
+              ⋯
+            </button>
+            <div *ngIf="showPostMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+              <button
+                (click)="removeFromModal()"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+              >
+                Quitar de guardados
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Caption -->
+        <div class="p-4 border-b border-gray-200">
+          <p class="text-gray-900">
+            <span class="font-bold">{{ selectedPost.user?.username || 'Usuario' }}</span>
+            <span class="ml-2">{{ selectedPost.caption }}</span>
+          </p>
+        </div>
+
+        <!-- Comentarios (scroll) -->
+        <div class="flex-1 overflow-y-auto p-4">
+          <app-comment-section 
+            [postId]="selectedPost.id"
+            [autoExpand]="true">
+          </app-comment-section>
+        </div>
+
+        <!-- Footer con likes -->
+        <div class="border-t border-gray-200 p-4">
+          <p class="font-bold text-gray-900">{{ selectedPost.likes }} likes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

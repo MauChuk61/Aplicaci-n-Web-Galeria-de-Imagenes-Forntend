@@ -1,0 +1,102 @@
+<div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
+  <!-- Post Header -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <div class="flex items-center space-x-3">
+      <img
+        [src]="post.user?.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + post.userId"
+        alt="{{ post.user?.username || 'Usuario' }}"
+        class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 cursor-pointer hover:opacity-80"
+        (click)="viewProfile(post.user?.username || '')"
+      />
+      <div>
+        <p (click)="viewProfile(post.user?.username || '')" 
+           class="font-bold text-gray-900 hover:text-gray-700 cursor-pointer">
+          {{ post.user?.username || 'Usuario' }}
+        </p>
+        <p class="text-xs text-gray-500">
+          {{ post.createdAt | date : 'short' }}
+        </p>
+      </div>
+    </div>
+      <!-- Botón de menú eliminado -->
+  </div>
+
+  <!-- Post Image -->
+  <img [src]="post.imageUrl" alt="Post" class="w-full h-96 object-cover hover:opacity-95 transition" />
+
+  <!-- Post Actions -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <div class="flex items-center space-x-1">
+      <!-- Like Button -->
+      <div class="relative">
+        <button 
+          (click)="likePost()" 
+          class="flex items-center space-x-2 transition group px-3 py-2 rounded-lg hover:bg-gray-100"
+          [class.text-red-500]="hasLiked"
+          [class.text-gray-600]="!hasLiked"
+        >
+          <span class="text-2xl group-hover:scale-110 transition">
+            {{ hasLiked ? '❤️' : '🤍' }}
+          </span>
+          <span class="text-sm font-medium">{{ post.likes }}</span>
+        </button>
+
+        <!-- Reaction Picker Popup -->
+        <div *ngIf="showReactionPicker" class="absolute bottom-12 left-0 bg-white border border-gray-200 rounded-full shadow-lg p-2 flex gap-2 z-20">
+          <button 
+            *ngFor="let type of reactionTypes"
+            (click)="addReaction(type)"
+            class="text-2xl hover:scale-125 transition p-1"
+            [title]="type"
+          >
+            {{ reactionEmojis[type] }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Comment Button -->
+      <button 
+        (click)="toggleComments()" 
+        class="flex items-center space-x-2 text-gray-600 hover:text-blue-500 transition group px-3 py-2 rounded-lg hover:bg-gray-100"
+      >
+        <span class="text-2xl group-hover:scale-110 transition">💬</span>
+        <span class="text-sm font-medium">{{ commentSection?.commentsCount || 0 }}</span>
+      </button>
+
+        <!-- Botón de compartir eliminado -->
+    </div>
+
+    <!-- Save Button -->
+    <button 
+      (click)="toggleSavePost()"
+      class="text-gray-600 hover:text-yellow-500 transition group px-3 py-2 rounded-lg hover:bg-gray-100"
+    >
+      <span class="text-2xl group-hover:scale-110 transition">{{ post.isSaved ? '🔖' : '🖇️' }}</span>
+    </button>
+  </div>
+
+  <!-- Reactions Summary -->
+  <div *ngIf="post.reactions && post.reactions.length > 0" class="px-4 py-2 border-b border-gray-100">
+    <div class="flex gap-2 text-xs">
+      <span *ngFor="let reaction of getReactionSummary()" class="inline-flex items-center gap-1">
+        {{ getReactionEmoji(reaction.type) }}<span class="text-gray-600">{{ reaction.count }}</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Caption -->
+  <div class="px-4 py-3 border-b border-gray-200">
+    <p class="text-gray-900 text-sm">
+      <span (click)="viewProfile(post.user?.username || '')" 
+            class="font-bold hover:underline cursor-pointer">
+        {{ post.user?.username || 'Usuario' }}
+      </span>
+      {{ post.caption }}
+    </p>
+  </div>
+
+  <!-- Comments Section -->
+  <div class="px-4 py-2">
+    <app-comment-section [postId]="post.id"></app-comment-section>
+  </div>
+</div>

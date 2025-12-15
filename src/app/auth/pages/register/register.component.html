@@ -1,0 +1,126 @@
+<div class="min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-block text-5xl mb-2">📷</div>
+      <h1 class="text-4xl font-black">
+        <span style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          Neochuk
+        </span>
+      </h1>
+      <p class="text-gray-500 text-sm mt-2">Únete a nuestra comunidad</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
+      <div class="mb-4">
+        <label class="block text-gray-700 font-bold mb-2">👤 Nombre de Usuario</label>
+        <input
+          type="text"
+          formControlName="username"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition"
+          placeholder="tu_usuario"
+        />
+        <div *ngIf="submitted && f['username'].errors" class="text-red-500 text-sm mt-2 flex items-center space-x-1">
+          <span>⚠️</span>
+          <div>
+            <span *ngIf="f['username'].errors['required']">El nombre de usuario es requerido</span>
+            <span *ngIf="f['username'].errors['minlength']">Mínimo 3 caracteres</span>
+          </div>
+        </div>
+        <div *ngIf="usernameError" class="text-red-500 text-sm mt-2 flex items-center space-x-1">
+          <span>⚠️</span>
+          <span>{{ usernameError }}</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-4">
+        <label class="block text-gray-700 font-bold mb-2">📧 Correo Electrónico</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition"
+          placeholder="tu@correo.com"
+        />
+        <div *ngIf="submitted && f['email'].errors" class="text-red-500 text-sm mt-2 flex items-center space-x-1">
+          <span>⚠️</span>
+          <div>
+            <span *ngIf="f['email'].errors['required']">El correo es requerido</span>
+            <span *ngIf="f['email'].errors['email']">Ingresa un correo válido</span>
+          </div>
+        </div>
+        <div *ngIf="emailError" class="text-red-500 text-sm mt-2 flex items-center space-x-1">
+          <span>⚠️</span>
+          <span>{{ emailError }}</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label class="block text-gray-700 font-bold mb-2">🔐 Contraseña</label>
+        <input
+          type="password"
+          formControlName="password"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition"
+          placeholder="••••••"
+        />
+        <div *ngIf="submitted && f['password'].errors" class="text-red-500 text-sm mt-2 flex items-center space-x-1">
+          <span>⚠️</span>
+          <div>
+            <span *ngIf="f['password'].errors['required']">La contraseña es requerida</span>
+            <span *ngIf="f['password'].errors['minlength']">Mínimo 6 caracteres</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Name (opcional) -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-bold mb-2">👤 Nombre Completo (opcional)</label>
+        <input
+          type="text"
+          formControlName="fullName"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition"
+          placeholder="Tu nombre completo"
+        />
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-4 flex items-start space-x-2">
+        <span>❌</span>
+        <span>{{ error }}</span>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="success" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-4 flex items-start space-x-2">
+        <span>✅</span>
+        <span>{{ success }}</span>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 duration-200"
+      >
+        {{ loading ? '⏳ Registrando...' : '🚀 Registrarse' }}
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="flex items-center my-6">
+      <hr class="flex-1" />
+      <span class="px-2 text-gray-400 text-sm">O</span>
+      <hr class="flex-1" />
+    </div>
+
+    <!-- Login Link -->
+    <p class="text-center text-gray-600">
+      ¿Ya tienes cuenta?
+      <a routerLink="/auth/login" class="text-pink-500 font-bold hover:text-pink-700 transition">
+        Inicia sesión aquí 👉
+      </a>
+    </p>
+  </div>
+</div>
