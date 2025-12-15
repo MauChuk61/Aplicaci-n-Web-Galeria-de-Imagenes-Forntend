@@ -1,1 +1,1 @@
-# Aplicaci-n-Web-Galeria-de-Imagenes-Forntend
+# Aplicacion-Web-Galeria-de-Imagenes-Forntend
